@@ -14,8 +14,8 @@ const (
 	DELETE_RULE = "delrule"
 )
 
-func GetFirewallStatus(id string) models.FirewallStatus {
-	url := "https://api.absam.io/v1/cloud-server/firewall?id=" + id + "&action=status"
+func GetFirewallStatus(id, product string) models.FirewallStatus {
+	url := "https://api.absam.io/v1/" + product + "/firewall?id=" + id + "&action=status"
 
 	data, err := utils.Get(url)
 	if err != nil {
@@ -28,8 +28,9 @@ func GetFirewallStatus(id string) models.FirewallStatus {
 	return status
 }
 
-func GetFirewallRules(id string) models.FirewallRules {
-	url := "https://api.absam.io/v1/cloud-server/firewall?id=" + id + "&action=list"
+func GetFirewallRules(id, product string) models.FirewallRules {
+	url := "https://api.absam.io/v1/" + product + "/firewall?id=" + id + "&action=list"
+
 	data, err := utils.Get(url)
 	if err != nil {
 		utils.Die(err)
@@ -41,8 +42,8 @@ func GetFirewallRules(id string) models.FirewallRules {
 	return rules
 }
 
-func ChangeFirewallStatus(id, action string) models.ChangeFirewallSuccess {
-	reqUrl := "https://api.absam.io/v1/cloud-server/firewall"
+func ChangeFirewallStatus(id, action, product string) models.ChangeFirewallSuccess {
+	reqUrl := "https://api.absam.io/v1/" + product + "/firewall"
 
 	form := url.Values{}
 	form.Set("id", id)
@@ -60,8 +61,8 @@ func ChangeFirewallStatus(id, action string) models.ChangeFirewallSuccess {
 	return result
 }
 
-func AddRule(id, reqType, port, ip, proto, comment, expires string) models.ChangeFirewallSuccess {
-	reqUrl := "https://api.absam.io/v1/cloud-server/firewall"
+func AddRule(id, reqType, port, ip, proto, comment, expires, product string) models.ChangeFirewallSuccess {
+	reqUrl := "https://api.absam.io/v1/" + product + "/firewall"
 
 	form := url.Values{}
 	form.Set("id", id)
@@ -84,8 +85,8 @@ func AddRule(id, reqType, port, ip, proto, comment, expires string) models.Chang
 	return result
 }
 
-func EditRule(id, reqType, port, ip, proto, comment, expires, position string) models.ChangeFirewallSuccess {
-	reqUrl := "https://api.absam.io/v1/cloud-server/firewall"
+func EditRule(id, reqType, port, ip, proto, comment, expires, position, product string) models.ChangeFirewallSuccess {
+	reqUrl := "https://api.absam.io/v1/" + product + "/firewall"
 
 	form := url.Values{}
 	form.Set("id", id)
@@ -109,8 +110,8 @@ func EditRule(id, reqType, port, ip, proto, comment, expires, position string) m
 	return result
 }
 
-func RemoveRule(id, pos string) models.ChangeFirewallSuccess {
-	reqUrl := "https://api.absam.io/v1/cloud-server/firewall"
+func RemoveRule(id, pos, product string) models.ChangeFirewallSuccess {
+	reqUrl := "https://api.absam.io/v1/" + product + "/firewall"
 
 	form := url.Values{}
 	form.Set("id", id)

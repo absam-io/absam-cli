@@ -11,7 +11,9 @@ import (
 )
 
 const (
-	FIREWALL_ACTION = 1
+	PRODUCT=0
+	FIREWALL_SERVICE_ID=1
+	FIREWALL_ACTION = 2
 )
 
 var (
@@ -26,9 +28,9 @@ var (
 
 var (
 	firewallCmd = &cobra.Command{
-		Use:   "firewall [id [on|off|add|edit|del|status|rules]]",
-		Short: "Manage a server's firewall",
-		Long:  "Manage a server's firewall",
+		Use:   "firewall [server|cloud-app id [on|off|add|edit|del|status|rules]]",
+		Short: "Manage a service's firewall",
+		Long:  "Manage a service's firewall",
 
 		Run: func(cmd *cobra.Command, args []string) {
 			err := manageFirewall(cmd, args)
@@ -55,12 +57,12 @@ func validateFirewallArgs(cmd *cobra.Command, args []string) {
 		os.Exit(utils.FAIL)
 	}
 
-	if len(args) > 2 || len(args) < 2 {
+	if len(args) > 3 || len(args) < 3 {
 		cmd.Help()
 		os.Exit(utils.FAIL)
 	}
 
-	if _, err := strconv.Atoi(args[SERVICE_ID]); err != nil {
+	if _, err := strconv.Atoi(args[FIREWALL_SERVICE_ID]); err != nil {
 		cmd.Help()
 		os.Exit(utils.FAIL)
 	}
@@ -76,25 +78,26 @@ func parseFirewallArgs(cmd *cobra.Command, args []string) {
 
 	switch args[FIREWALL_ACTION] {
 	case "on":
-		result := api.ChangeFirewallStatus(args[SERVICE_ID], args[FIREWALL_ACTION])
+		result := api.ChangeFirewallStatus(args[FIREWALL_SERVICE_ID], args[FIREWALL_ACTION], args[PRODUCT])
 		tui.PrintFirewallMessage(result.Success)
 	case "off":
-		result := api.ChangeFirewallStatus(args[SERVICE_ID], args[FIREWALL_ACTION])
+		result := api.ChangeFirewallStatus(args[FIREWALL_SERVICE_ID], args[FIREWALL_ACTION], args[PRODUCT])
 		tui.PrintFirewallMessage(result.Success)
 	case "add":
 		result := api.AddRule(
-			args[SERVICE_ID],
+			args[FIREWALL_SERVICE_ID],
 			rule_type,
 			rule_port,
 			rule_ip,
 			rule_proto,
 			rule_comment,
 			rule_expires,
+			args[PRODUCT],
 		)
 		tui.PrintFirewallMessage(result.Success)
 	case "edit":
 		result := api.EditRule(
-			args[SERVICE_ID],
+			args[FIREWALL_SERVICE_ID],
 			rule_type,
 			rule_port,
 			rule_ip,
@@ -102,16 +105,17 @@ func parseFirewallArgs(cmd *cobra.Command, args []string) {
 			rule_comment,
 			rule_expires,
 			rule_position,
+			args[PRODUCT],
 		)
 		tui.PrintFirewallMessage(result.Success)
 	case "del":
-		result := api.RemoveRule(args[SERVICE_ID], rule_position)
+		result := api.RemoveRule(args[FIREWALL_SERVICE_ID], rule_position, args[PRODUCT])
 		tui.PrintFirewallMessage(result.Success)
 	case "status":
-		status := api.GetFirewallStatus(args[SERVICE_ID])
+		status := api.GetFirewallStatus(args[FIREWALL_SERVICE_ID], args[PRODUCT])
 		tui.PrintFirewallStatus(status)
 	case "rules":
-		rules := api.GetFirewallRules(args[SERVICE_ID])
+		rules := api.GetFirewallRules(args[FIREWALL_SERVICE_ID], args[PRODUCT])
 
 		if len(rules.Rules.In) == 0 && len(rules.Rules.Out) == 0 {
 			tui.PrintFirewallMessage("No rules found.")

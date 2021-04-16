@@ -11,13 +11,13 @@ import (
 )
 
 var (
-	serverCmd = &cobra.Command{
-		Use:   "server [all] [id [status|start|shutdown|restart|stop]]",
+	cloudAppCmd = &cobra.Command{
+		Use:   "cloud-app [all] [id [status|start|shutdown|restart|stop]]",
 		Short: "Manage servers",
 		Long:  "Manage servers",
 
 		Run: func(cmd *cobra.Command, args []string) {
-			err := manageServer(cmd, args)
+			err := manageCloudApp(cmd, args)
 			if err != nil {
 				utils.Die(err)
 			}
@@ -25,13 +25,7 @@ var (
 	}
 )
 
-const (
-	EMPTY         = 0
-	SERVICE_ID    = 0
-	SERVER_ACTION = 1
-)
-
-func validateArgs(cmd *cobra.Command, args []string) {
+func validateCloudAppArgs(cmd *cobra.Command, args []string) {
 	if len(args) == EMPTY {
 		cmd.Help()
 		os.Exit(utils.FAIL)
@@ -48,38 +42,38 @@ func validateArgs(cmd *cobra.Command, args []string) {
 	}
 }
 
-func parseArgs(cmd *cobra.Command, args []string) {
+func parseCloudAppArgs(cmd *cobra.Command, args []string) {
 	validateArgs(cmd, args)
 
 	switch args[SERVICE_ID] {
 	case "all":
-		servers := api.GetServers()
+		servers := api.GetCloudApps()
 		tui.PrintAllServers(servers)
 	default:
 		if len(args) > 1 {
 			if args[SERVER_ACTION] == "status" {
-				status := api.GetServerStatus(args[0])
+				status := api.GetCloudAppStatus(args[0])
 				tui.PrintServerStatus(status)
 			} else if args[SERVER_ACTION] == "start" {
-				result := api.ManageServer("start", args[SERVICE_ID])
+				result := api.ManageCloudApp("start", args[SERVICE_ID])
 				tui.PrintResult(result)
 			} else if args[SERVER_ACTION] == "shutdown" {
-				result := api.ManageServer("shutdown", args[SERVICE_ID])
+				result := api.ManageCloudApp("shutdown", args[SERVICE_ID])
 				tui.PrintResult(result)
 			} else if args[SERVER_ACTION] == "restart" {
-				result := api.ManageServer("reset", args[SERVICE_ID])
+				result := api.ManageCloudApp("reset", args[SERVICE_ID])
 				tui.PrintResult(result)
 			} else if args[SERVER_ACTION] == "stop" {
-				result := api.ManageServer("stop", args[SERVICE_ID])
+				result := api.ManageCloudApp("stop", args[SERVICE_ID])
 				tui.PrintResult(result)
 			}
 		}
-		info := api.GetServerInfo(args[SERVICE_ID])
+		info := api.GetCloudAppInfo(args[SERVICE_ID])
 		tui.PrintSingleServer(info)
 	}
 }
 
-func manageServer(cmd *cobra.Command, args []string) error {
-	parseArgs(cmd, args)
+func manageCloudApp(cmd *cobra.Command, args []string) error {
+	parseCloudAppArgs(cmd, args)
 	return nil
 }

@@ -8,8 +8,9 @@ import (
 	"github.com/absam-io/absam-cli/utils"
 )
 
-func GetServers() models.Servers {
-	data, err := utils.Get("http://localhost:8080/v1/cloud-server/listall")
+
+func GetCloudApps() models.Servers {
+	data, err := utils.Get("https://api.absam.io/v1/cloud-app/listall")
 	if err != nil {
 		utils.Die(err)
 	}
@@ -20,8 +21,8 @@ func GetServers() models.Servers {
 	return servers
 }
 
-func GetServerInfo(id string) models.SingleServer {
-	url := "http://localhost:8080/v1/cloud-server/info?id=" + id
+func GetCloudAppInfo(id string) models.SingleServer {
+	url := "https://api.absam.io/v1/cloud-app/info?id=" + id
 
 	data, err := utils.Get(url)
 	if err != nil {
@@ -34,8 +35,8 @@ func GetServerInfo(id string) models.SingleServer {
 	return server
 }
 
-func GetServerStatus(id string) models.Status {
-	url := "http://localhost:8080/v1/cloud-server/status?id=" + id
+func GetCloudAppStatus(id string) models.Status {
+	url := "https://api.absam.io/v1/cloud-app/status?id=" + id
 
 	data, err := utils.Get(url)
 	if err != nil {
@@ -48,8 +49,8 @@ func GetServerStatus(id string) models.Status {
 	return status
 }
 
-func ManageServer(action, id string) models.Result {
-	reqUrl := "http://localhost:8080/v1/cloud-server/" + action
+func ManageCloudApp(action, id string) models.Result {
+	reqUrl := "https://api.absam.io/v1/cloud-app/" + action
 
 	form := url.Values{}
 	form.Set("id", id)
