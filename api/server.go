@@ -9,7 +9,7 @@ import (
 )
 
 func GetServers() models.Servers {
-	data, err := utils.Get("http://localhost:8080/v1/cloud-server/listall")
+	data, err := utils.Get("http://api.absam.io/v1/cloud-server/listall")
 	if err != nil {
 		utils.Die(err)
 	}
@@ -21,7 +21,7 @@ func GetServers() models.Servers {
 }
 
 func GetServerInfo(id string) models.SingleServer {
-	url := "http://localhost:8080/v1/cloud-server/info?id=" + id
+	url := "http://api.absam.io/v1/cloud-server/info?id=" + id
 
 	data, err := utils.Get(url)
 	if err != nil {
@@ -35,7 +35,7 @@ func GetServerInfo(id string) models.SingleServer {
 }
 
 func GetServerStatus(id string) models.Status {
-	url := "http://localhost:8080/v1/cloud-server/status?id=" + id
+	url := "http://api.absam.io/v1/cloud-server/status?id=" + id
 
 	data, err := utils.Get(url)
 	if err != nil {
@@ -49,7 +49,7 @@ func GetServerStatus(id string) models.Status {
 }
 
 func ManageServer(action, id string) models.Result {
-	reqUrl := "http://localhost:8080/v1/cloud-server/" + action
+	reqUrl := "http://api.absam.io/v1/cloud-server/" + action
 
 	form := url.Values{}
 	form.Set("id", id)
