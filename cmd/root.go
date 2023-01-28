@@ -18,5 +18,6 @@ func init() {
 	rootCmd.AddCommand(initCmd)
 	rootCmd.AddCommand(serverCmd)
 	rootCmd.AddCommand(cloudAppCmd)
+	rootCmd.AddCommand(cloudDatabaseCmd)
 	rootCmd.AddCommand(firewallCmd)
 }
